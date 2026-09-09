@@ -1,0 +1,2 @@
+import {Menu,Search,Bell} from 'lucide-react'; import {useLocation} from 'react-router-dom'; const names={'/':'Dashboard','/leads':'Leads','/follow-ups':'Follow-ups','/settings':'Settings'};
+export default function Header({onMenu}){const title=names[useLocation().pathname]||'Lead details';return <header><button className="mobile-menu" onClick={onMenu}><Menu size={20}/></button><h1>{title}</h1><div className="header-user"><Search size={18}/><Bell size={18}/><span className="avatar">OS</span><span><b>Omar Saleh</b><small>Sales Manager</small></span></div></header>}

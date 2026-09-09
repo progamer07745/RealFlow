@@ -1,0 +1,3 @@
+import {LayoutDashboard,Users,CalendarDays,Settings,X} from 'lucide-react'; import {NavLink} from 'react-router-dom';
+const links=[['Dashboard','/',LayoutDashboard],['Leads','/leads',Users],['Follow-ups','/follow-ups',CalendarDays],['Settings','/settings',Settings]];
+export default function Sidebar({open,onClose}){return <aside className={`sidebar ${open?'open':''}`}><div className="brand"><span>R</span>RealFlow<button onClick={onClose}><X/></button></div><nav>{links.map(([label,path,Icon])=><NavLink end={path==='/'} to={path} onClick={onClose}><Icon size={18}/>{label}</NavLink>)}</nav><div className="demo-note"><b>Demo Mode</b><small>Fictional sales data</small></div></aside>}
