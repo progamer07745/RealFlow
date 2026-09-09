@@ -1,0 +1,12 @@
+import Lead from '../models/Lead.js';
+const fields = ['name','phone','property','location','budget','status','priority','assignedTo','nextFollowUp','followUpCompleted','notes'];
+export const getLeads = async (req,res,next) => { try { res.json(await Lead.find().sort({ createdAt: -1 })); } catch(e){ next(e); } };
+export const getLead = async (req,res,next) => { try { const lead = await Lead.findById(req.params.id); if(!lead) return res.status(404).json({message:'Lead not found'}); res.json(lead); } catch(e){ next(e); } };
+export const createLead = async (req,res,next) => { try { const lead = await Lead.create({...req.body, timeline:[{action:'Lead created',date:new Date()}]}); res.status(201).json(lead); } catch(e){ next(e); } };
+export const updateLead = async (req,res,next) => { try { const lead = await Lead.findById(req.params.id); if(!lead) return res.status(404).json({message:'Lead not found'}); const previous = { status:lead.status, priority:lead.priority, followUpCompleted:lead.followUpCompleted, notes:lead.notes }; fields.forEach(k=>{if(req.body[k] !== undefined) lead[k]=req.body[k]});
+ if(req.body.status && req.body.status !== previous.status) lead.timeline.push({action:`Status changed to ${req.body.status}`,date:new Date()});
+ if(req.body.priority && req.body.priority !== previous.priority) lead.timeline.push({action:`Priority changed to ${req.body.priority}`,date:new Date()});
+ if(req.body.followUpCompleted === true && !previous.followUpCompleted) lead.timeline.push({action:'Follow-up marked as completed',date:new Date()});
+ if(req.body.notes !== undefined && req.body.notes !== previous.notes) lead.timeline.push({action:'Notes updated',date:new Date()});
+ await lead.save(); res.json(lead); } catch(e){ next(e); } };
+export const deleteLead = async (req,res,next) => { try { const lead=await Lead.findByIdAndDelete(req.params.id); if(!lead) return res.status(404).json({message:'Lead not found'}); res.status(204).send(); } catch(e){next(e)} };

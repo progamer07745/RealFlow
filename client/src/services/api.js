@@ -1,0 +1,3 @@
+const API=import.meta.env.VITE_API_URL||'http://localhost:5000/api';
+async function request(path,options={}){const res=await fetch(`${API}${path}`,{headers:{'Content-Type':'application/json'},...options});if(!res.ok){const body=await res.json().catch(()=>({}));throw new Error(body.message||'Unable to connect to the server. Please make sure the API is running.')}return res.status===204?null:res.json()}
+export const leadsApi={list:()=>request('/leads'),get:id=>request(`/leads/${id}`),create:data=>request('/leads',{method:'POST',body:JSON.stringify(data)}),update:(id,data)=>request(`/leads/${id}`,{method:'PATCH',body:JSON.stringify(data)}),remove:id=>request(`/leads/${id}`,{method:'DELETE'})};
