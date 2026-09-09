@@ -1,0 +1,1 @@
+export function normalizeFollowUp(value){if(value===null||value==='')return null;const date=new Date(value);if(Number.isNaN(date.getTime())){const error=new Error('Next follow-up must be a valid date and time.');error.statusCode=400;throw error}return date}
